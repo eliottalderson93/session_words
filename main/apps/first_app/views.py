@@ -33,21 +33,30 @@ def generate(request):
         request.session['form_number'] = 0
         request.session['word_list'] = []
     if request.method == "POST":
+        #form count
         request.session['form_number'] += 1
+        #flashes
         message_string = 'you have submitted this form ' + str(request.session['form_number']) + ' times'
         messages.add_message(request, messages.INFO, message_string)
+        #click logic
         temp_list = request.session['word_list']
+        #bold condition
         if 'bold' in request.POST:
-            this_word = {"word" : request.POST['word'], "color" : request.POST['color'], "bold" : True, "timestamp" : strftime("%Y-%m-%d %H:%M %p", gmtime())}
+            checkbox = True
         else:
-            this_word = {"word" : request.POST['word'], "color" : request.POST['color'], "bold" : False, "timestamp" : strftime("%Y-%m-%d %H:%M %p", gmtime())}
+            checkbox = False 
+        #words object with attributes 
+        this_word = {"word" : request.POST['word'], "color" : request.POST['color'], "bold" : checkbox, "timestamp" : strftime("%Y-%m-%d %H:%M %p", gmtime())}
         temp_list.append(this_word)
-        print("UPDATED WORD LIST::",temp_list)
+        #print("UPDATED WORD LIST::",temp_list)
         request.session['word_list'] = temp_list
-        print("SESSION::",request.session['word_list'])
+        #print("SESSION::",request.session['word_list'])
         return redirect("/result")
     else:
         return redirect("/")
+
+
+
 def show(request, number):
     response = "Placeholder to display blog "+str(number)
     return HttpResponse(response)
